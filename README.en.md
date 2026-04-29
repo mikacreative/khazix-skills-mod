@@ -31,7 +31,7 @@ Each one was running in my own projects long enough to prove it actually saves t
 
 | Name | One-liner | Article |
 |---|---|---|
-| 🧹 [**neat-freak**](#-neat-freak) | After a session, run `/neat` to reconcile your project docs, CLAUDE.md, and agent memory with the code | *Coming soon* |
+| 🧹 [**neat-freak**](#-neat-freak) | After a session, run `/neat` to reconcile your project docs, CLAUDE.md, agent memory, and Obsidian project notes with the code | *Coming soon* |
 | 🔭 [**hv-analysis**](#-hv-analysis) | Drop a product/company/concept into it and get a 10k–30k word PDF research report | [Article (Chinese)](https://mp.weixin.qq.com/s/Y_uRMYBmdLWUPnz_ac7jWA) |
 | ✍️ [**khazix-writer**](#-khazix-writer) | Makes the agent write long-form Chinese articles in my personal voice | [Article (Chinese)](https://mp.weixin.qq.com/s/AtxGrii_K-nzkwUM9SNhEg) |
 
@@ -110,7 +110,7 @@ tessl install khazix-skills/<skill-name>
 
 > *"If I don't run /neat before closing the window, I get itchy. Like there's something stuck in my throat."*
 
-After every session, run `/neat`. It reconciles whatever you changed in this conversation against three layers of project knowledge: **docs**, **root CLAUDE.md / AGENTS.md**, and the **agent's memory system**. Outputs a change summary at the end.
+After every session, run `/neat`. It reconciles whatever you changed in this conversation against four layers of project knowledge: **docs**, **root CLAUDE.md / AGENTS.md**, the **agent's memory system**, and **Obsidian project notes**. Outputs a change summary at the end.
 
 **Why you'd want this**
 
@@ -118,13 +118,14 @@ You've probably hit this: code has been through 7-8 iterations but the README is
 
 The agent isn't getting dumber — your docs and memory are. neat-freak's job is to clean it up.
 
-**It touches three layers**
+**It touches four layers**
 
 - Project root CLAUDE.md / AGENTS.md (read by the AI in this project)
 - Project docs/ and README (read by teammates and downstream developers)
 - The agent's own memory system (read by future you across sessions)
+- Obsidian `20 Projects` project notes (read by the project owner, managers, and cross-tool handoffs)
 
-These three layers have different audiences and don't overlap. That's exactly why I wasn't satisfied with Claude Code's AutoDream — it only touched memory, leaving the docs to rot.
+These four layers have different audiences and don't overlap. That's exactly why I wasn't satisfied with Claude Code's AutoDream — it only touched memory, leaving docs and project-management notes to rot.
 
 **How to trigger**
 

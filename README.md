@@ -31,7 +31,7 @@
 
 | 名字 | 一句话 | 讲解 |
 |---|---|---|
-| 🧹 [**neat-freak（洁癖）**](#-neat-freak洁癖) | 干完活跑一下 `/neat`，自动把你这次改的东西跟项目文档、CLAUDE.md、Agent 记忆全部对齐 | *待发布* |
+| 🧹 [**neat-freak（洁癖）**](#-neat-freak洁癖) | 干完活跑一下 `/neat`，自动把你这次改的东西跟项目文档、CLAUDE.md、Agent 记忆、Obsidian 项目笔记全部对齐 | *待发布* |
 | 🔭 [**hv-analysis（横纵分析法）**](#-hv-analysis横纵分析法) | 想搞懂一个产品/公司/概念是怎么回事，丢给它，给你一份万字 PDF 研究报告 | [公众号文章](https://mp.weixin.qq.com/s/Y_uRMYBmdLWUPnz_ac7jWA) |
 | ✍️ [**khazix-writer（卡兹克写作）**](#-khazix-writer卡兹克写作) | 装上之后，Agent 用我的口吻和节奏写公众号长文 | [公众号文章](https://mp.weixin.qq.com/s/AtxGrii_K-nzkwUM9SNhEg) |
 
@@ -110,7 +110,7 @@ tessl install khazix-skills/<skill-name>
 
 > *"每次任务做完要退出窗口的时候，如果不跑一遍 /neat，我就浑身难受，如坐针毡如芒刺背如鲠在喉。"*
 
-每次你在 Agent 里干完一件事，跑一下 `/neat`，它会把你这次会话改的东西，跟项目里的**文档**、**CLAUDE.md / AGENTS.md**、**Agent 记忆**全部对齐一遍，最后给你一份变更摘要。
+每次你在 Agent 里干完一件事，跑一下 `/neat`，它会把你这次会话改的东西，跟项目里的**文档**、**CLAUDE.md / AGENTS.md**、**Agent 记忆**、**Obsidian 项目笔记**全部对齐一遍，最后给你一份变更摘要。
 
 **为什么需要这个**
 
@@ -118,13 +118,14 @@ tessl install khazix-skills/<skill-name>
 
 不是模型变笨，是文档和记忆脑腐了。neat-freak 就是清这个的。
 
-**它会动哪三层东西**
+**它会动哪四层东西**
 
 - 项目根的 CLAUDE.md / AGENTS.md（给当前 AI 看的）
 - 项目的 docs/ 和 README（给同事和其他人看的）
 - Agent 自己的记忆系统（给跨会话的自己看的）
+- Obsidian `20 Projects` 项目笔记（给项目 owner、管理者和跨工具接手者看的）
 
-这三层受众不同，职责不重叠，得分别处理。这也是我当时不满意 Claude Code 那个 AutoDream 的原因——它只动记忆，不动文档。
+这四层受众不同，职责不重叠，得分别处理。这也是我当时不满意 Claude Code 那个 AutoDream 的原因——它只动记忆，不动文档和项目管理面。
 
 **怎么触发**
 
