@@ -2,6 +2,19 @@
 
 不同 agent 平台的记忆系统和项目配置文件位置不一样。执行第一步盘点时按你正在使用的平台查这张表。
 
+## 平台无关：Obsidian 项目笔记
+
+| 用途 | 路径 |
+|---|---|
+| Obsidian Vault | `/Users/mikawang/Documents/Obsidian/Mika Daily` |
+| 项目管理目录 | `/Users/mikawang/Documents/Obsidian/Mika Daily/20 Projects` |
+| Projects Dashboard | `/Users/mikawang/Documents/Obsidian/Mika Daily/20 Projects/Projects Dashboard.md` |
+| Project Context Index | `/Users/mikawang/Documents/Obsidian/Mika Daily/20 Projects/Project Context Index.md` |
+
+这是一层**跨 agent 共享的项目管理文档面**，不是 Claude / Codex / OpenCode / OpenClaw 的私有记忆。只要本机存在该 Vault，所有 agent 在执行 neat-freak 时都要按项目名、仓库名、产品名、别名匹配 `20 Projects` 下的项目文件夹或 `.md` 笔记，并把相关笔记纳入盘点与同步。
+
+优先维护章节：`当前状态`、`关键决策`、`本次进展`、`下一步任务`、`风险 / 阻塞`、`工作日志`。新建项目笔记时，同时更新 `Projects Dashboard.md` 和 `Project Context Index.md`。
+
 ## Claude Code
 
 | 用途 | 路径 |
@@ -56,6 +69,7 @@ OpenCode 同时读取 Claude Code 和 Codex 的目录,所以同一个 skill 装�
 - 项目根 markdown(CLAUDE.md / AGENTS.md / 本平台等价文件)
 - README.md
 - docs/
+- Obsidian `20 Projects` 里的相关项目笔记(若本机存在)
 
 仍然是有效的同步——记忆是锦上添花,docs 才是项目知识的最低保障。
 
@@ -65,4 +79,4 @@ OpenCode 同时读取 Claude Code 和 Codex 的目录,所以同一个 skill 装�
 
 - **项目根同时放 `CLAUDE.md` 和 `AGENTS.md`**,内容可以互相 symlink 或在两边维护
 - 或者一份内容主文件 + 另一份用一行 `See CLAUDE.md` 跳转
-- docs/ 和 README 是平台中立的,不需要分两份
+- docs/、README 和 Obsidian `20 Projects` 项目笔记是平台中立的,不需要按 agent 分多份

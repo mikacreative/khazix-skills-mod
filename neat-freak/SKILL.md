@@ -2,7 +2,7 @@
 name: neat-freak
 description: >
   End-of-session knowledge cleanup with OCD-level rigor — reconciles project docs
-  (CLAUDE.md, README.md, docs/) and agent memory against the code so nothing rots.
+  (CLAUDE.md, README.md, docs/, Obsidian project notes) and agent memory against the code so nothing rots.
   会话结束后对项目文档和记忆进行洁癖级审查与同步。MUST trigger when the user says:
   "sync up", "tidy up docs", "update memory", "clean up docs", "/sync", "/neat", "同步一下",
   "整理文档", "整理一下", "更新记忆", "梳理一下", "收尾", "这个阶段做完了",
@@ -26,7 +26,7 @@ description: >
 
 这个 Skill 的价值就在于：**让知识体系的每一层都跟得上代码的变化。**
 
-## 关键概念：三类知识，三种受众
+## 关键概念：四类知识，四种受众
 
 **必须先理解这件事，否则你会只改 CLAUDE.md 就结束，把下游同事和其他 agent 晾在那儿。**
 
@@ -35,10 +35,13 @@ description: >
 | **Agent 记忆系统**（若 agent 支持） | Agent 自己跨会话复用 | 个人偏好、非显而易见的项目事实、跨项目 reference | 下次会话 Agent 忘记历史决策 |
 | 项目根 `CLAUDE.md` / `AGENTS.md` | 当前项目里的 AI（下次会话自己） | 项目约定、结构、红线、环境变量、路由清单 | 下次 AI 在这个项目里走弯路 |
 | 项目 `docs/` + `README.md` | **其他人**（人类同事、下游开发者、未来接手的 AI） | 接入指南、架构图、运维手册、交接说明、API 参考 | **其他人或系统无法正确接入或运维** |
+| Obsidian 项目笔记 | 项目 owner / 管理者 / 跨工具接手者 | 当前状态、关键决策、本次进展、下一步任务、风险阻塞、工作日志 | 项目管理面和代码事实脱节，后续排期、交接、复盘失真 |
 
-这三层**受众不同，职责不重叠**。CLAUDE.md 里写"新增了 device flow 五个路由" ≠ docs/integration-guide.md 里"下游怎么接这套 flow" —— 前者是提醒自己，后者是教别人。**两份都要写。**
+这四层**受众不同，职责不重叠**。CLAUDE.md 里写"新增了 device flow 五个路由" ≠ docs/integration-guide.md 里"下游怎么接这套 flow" ≠ Obsidian 项目笔记里"本阶段已完成、下一步做什么"。**该写几层就写几层。**
 
 > **Agent 记忆系统的具体位置因平台而异**（Claude Code 在 `~/.claude/projects/<...>/memory/`，Codex 用 `AGENTS.md`，OpenCode 用 `.opencode/`，OpenClaw 用 `~/.openclaw/`）。完整路径速查见 [references/agent-paths.md](references/agent-paths.md)。如果当前 agent 没有独立的记忆系统，直接跳过这一层，把功夫全花在 docs 和项目根 markdown 上。
+>
+> **Obsidian 项目笔记是平台无关的共享文档面**。如果本机存在 `/Users/mikawang/Documents/Obsidian/Mika Daily/20 Projects/`，Claude Code、OpenAI Codex、OpenCode、OpenClaw 都要把其中匹配当前项目的项目文件夹/笔记纳入盘点与同步；这不是某个 agent 的私有记忆。
 
 ## 执行流程
 
@@ -54,8 +57,15 @@ description: >
    - `ls <project-root>/docs/ 2>/dev/null` → **枚举所有 docs**（缺失也要确认）
    - `find <project-root> -maxdepth 2 -name "*.md" -not -path "*/node_modules/*" -not -path "*/.git/*"` → 兜底抓散落的 .md
    - 读 `README.md`、`CLAUDE.md` / `AGENTS.md`、每一个 `docs/*.md`
-3. 读全局 agent 配置（若有，如 `~/.claude/CLAUDE.md`、`~/.codex/AGENTS.md`）
-4. 回顾本次对话全部内容
+3. 盘点 Obsidian 项目笔记（若本机存在）：
+   - Vault 路径：`/Users/mikawang/Documents/Obsidian/Mika Daily`
+   - 项目目录：`/Users/mikawang/Documents/Obsidian/Mika Daily/20 Projects`
+   - 先 `ls "/Users/mikawang/Documents/Obsidian/Mika Daily/20 Projects"`，再按项目名、仓库名、产品名、别名匹配相关项目文件夹或 `.md` 笔记
+   - 对匹配到的项目文件夹执行 `find "<obsidian-project-folder>" -maxdepth 2 -name "*.md"` 并读取相关笔记
+   - 优先维护这些章节：`当前状态`、`关键决策`、`本次进展`、`下一步任务`、`风险 / 阻塞`、`工作日志`
+   - 新建项目笔记时，同时更新 `20 Projects/Projects Dashboard.md` 和 `20 Projects/Project Context Index.md`
+4. 读全局 agent 配置（若有，如 `~/.claude/CLAUDE.md`、`~/.codex/AGENTS.md`）
+5. 回顾本次对话全部内容
 
 **输出一张文件清单**（内部用，不用给用户看），对每个文件标：「评估过 / 要改 / 不用改」。**漏一个不行**——这是这个 skill 最容易翻车的地方。
 
@@ -69,6 +79,7 @@ description: >
 - 新增数据库表 → CLAUDE.md + architecture 的 Data Model
 - 新增大特性（跨多文件） → 以上全部 + architecture 新章节 + handoff 已完成清单
 - 跨项目改动 → 上下游两边的 docs **都要对齐**（最常见的漏改场景）
+- 项目状态 / 决策 / 里程碑变化 → Obsidian 项目笔记的当前状态、关键决策、进展、下一步、风险也要对齐
 - 记忆层面：相对时间→绝对日期、过期事实→改、重复→合并、已完成待办→删
 
 完整映射表（覆盖更多变更类型与对应文档）见 **[references/sync-matrix.md](references/sync-matrix.md)**——遇到不确定的改动先查这张表。
@@ -79,7 +90,7 @@ description: >
 
 你必须**真的用 Edit 修改现有文件、用 Write 创建新文件、用删除命令清理废弃文件**。"我会怎么改"的描述不算完成。
 
-**顺序建议**：先改 docs/（改错影响外部）→ 再改 CLAUDE.md/AGENTS.md → 最后理记忆。先动外部优先级最高的，即使中途被打断，读者看到的也是对齐的最新状态。
+**顺序建议**：先改 docs/ 和 README（改错影响外部）→ 再改 Obsidian 项目笔记（项目管理与交接面）→ 再改 CLAUDE.md/AGENTS.md → 最后理记忆。先动外部优先级最高的，即使中途被打断，读者看到的也是对齐的最新状态。
 
 **编辑原则**：
 
@@ -88,7 +99,7 @@ description: >
 - **精确优于冗长**：一条记忆说清楚一件事，别塞三件
 - **绝对时间**：永远 `2026-04-29`，不写"今天"、"最近"
 - **面向读者**：docs/ 的读者是"第一次接触这个项目的外部人"，写的时候想象对方只有 5 分钟能看完
-- **受众不混**：CLAUDE.md 里不抄 docs/ 的全文，docs/ 里不写"我记得上次……"——这是记忆的事
+- **受众不混**：CLAUDE.md 里不抄 docs/ 的全文，docs/ 里不写"我记得上次……"，Obsidian 里不抄实现细节全文，只放项目状态、决策、进展、下一步和风险——这是项目管理面的事
 
 **全局配置极度克制**：`~/.claude/CLAUDE.md` / `~/.codex/AGENTS.md` 只有用户在对话中明确表达了**跨项目的核心原则**才动。日常项目细节绝不进全局。
 
@@ -100,6 +111,14 @@ description: >
 
 API 速查表、环境变量表、术语表是高频查询的结构化信息，**必须保持"所见即最新"**。
 
+**Obsidian 项目笔记编辑要点**——它不是代码文档的副本，而是项目管理与跨 agent 交接面：
+1. `当前状态`：用 1-3 句话说明项目现在能做什么、卡在哪里
+2. `关键决策`：只保留仍然有效的决策，推翻的决策删除或改为当前结论
+3. `本次进展`：记录本次实际完成的可验证结果
+4. `下一步任务`：留下可执行动作，不写含糊待办
+5. `风险 / 阻塞`：写清影响、触发条件、下一步验证方式
+6. `工作日志`：追加带绝对日期的简短记录，如 `2026-04-29 — ...`
+
 ### 第四步：自检清单（必须逐项过一遍）
 
 这一步防止"漏改 docs"。改完后逐条检查：
@@ -110,6 +129,8 @@ API 速查表、环境变量表、术语表是高频查询的结构化信息，*
 - [ ] 记忆之间没有互相矛盾
 - [ ] CLAUDE.md / AGENTS.md 里提到的路径 / 命令 / 工具 / 环境变量在代码中真实存在
 - [ ] README 的安装 / 运行步骤跟代码一致
+- [ ] Obsidian 相关项目笔记（若存在）里的当前状态、关键决策、进展、下一步、风险与本次事实一致
+- [ ] 新建或改名 Obsidian 项目笔记时，`Projects Dashboard.md` 和 `Project Context Index.md` 也同步更新
 - [ ] 新增 API 路由：**在 integration-guide 和 architecture 都出现了**
 - [ ] 新增环境变量：**在 runbook 和项目根 markdown 都出现了**
 - [ ] 新增数据库表：**在 architecture 的 Data Model 和项目根 markdown 都出现了**
@@ -134,6 +155,7 @@ API 速查表、环境变量表、术语表是高频查询的结构化信息，*
 - <项目 A>/CLAUDE.md — xxx
 - <项目 A>/docs/integration-guide.md — xxx
 - <项目 A>/docs/architecture.md — xxx
+- Obsidian/20 Projects/<项目 A>/... — xxx
 - <项目 B>/docs/<integration>.md — xxx
 
 ### 未处理
